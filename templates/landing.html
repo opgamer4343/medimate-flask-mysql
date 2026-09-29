@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediMate – Smart Medicine Reminder Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#737686",
+            "on-primary-fixed-variant": "#003ea8",
+            "secondary-container": "#86f2e4",
+            "inverse-surface": "#263143",
+            "surface-bright": "#f9f9ff",
+            "surface-container": "#e7eeff",
+            "tertiary-fixed-dim": "#b7c8e1",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#f0f3ff",
+            "surface-variant": "#d8e3fb",
+            "tertiary-fixed": "#d3e4fe",
+            "primary": "#004ac6",
+            "surface-container-highest": "#d8e3fb",
+            "on-secondary-fixed-variant": "#005049",
+            "secondary": "#006a61",
+            "primary-fixed": "#dbe1ff",
+            "on-tertiary-fixed": "#0b1c30",
+            "tertiary-container": "#5e6e85",
+            "secondary-fixed": "#89f5e7",
+            "on-primary-container": "#eeefff",
+            "secondary-fixed-dim": "#6bd8cb",
+            "outline-variant": "#c3c6d7",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#111c2d",
+            "on-error-container": "#93000a",
+            "background": "#f9f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-tint": "#0053db",
+            "surface-container-high": "#dee8ff",
+            "tertiary": "#46566c",
+            "inverse-primary": "#b4c5ff",
+            "inverse-on-surface": "#ecf1ff",
+            "error": "#ba1a1a",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#e9f0ff",
+            "on-tertiary-fixed-variant": "#38485d",
+            "on-secondary-fixed": "#00201d",
+            "primary-container": "#2563eb",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#00174b",
+            "on-surface-variant": "#434655",
+            "surface": "#f9f9ff",
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-dim": "#cfdaf2",
+            "on-background": "#111c2d",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#006f66"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "margin-mobile": "1rem",
+            "margin": "2rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-lg": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-lg": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-surface-container selection:text-primary min-h-screen flex flex-col">
+<!-- TOP APP BAR -->
+<header class="sticky top-0 z-40 w-full bg-surface-container-lowest border-b border-outline-variant shadow-sm transition-all duration-150 ease-in-out">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<!-- Brand Logo & Title -->
+<a class="flex items-center gap-3 group" href="#hero">
+<div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[22px]" data-icon="medication">medication</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">MediMate</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-surface-container text-primary font-medium border border-outline-variant">Clinical Tracker</span>
+</div>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-lg text-label-lg text-primary font-medium hover:text-primary transition-colors" href="#hero">Home</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant font-normal hover:text-primary transition-colors" href="#features">Features</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant font-normal hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant font-normal hover:text-primary transition-colors" href="#about">About</a>
+</nav>
+<!-- Desktop Action Buttons -->
+<div class="hidden md:flex items-center gap-3">
+<button class="font-label-lg text-label-lg font-medium px-4 py-2 rounded-lg text-on-surface bg-surface-container-lowest border border-outline-variant hover:bg-surface-container-low transition-colors duration-150" onclick="window.location.href='/login'">
+          Sign In
+        </button>
+<button class="font-label-lg text-label-lg font-medium px-4 py-2 rounded-lg text-on-primary bg-primary-container hover:bg-primary transition-colors duration-150 shadow-sm" onclick="window.location.href='/register'">
+          Get Started
+        </button>
+</div>
+<!-- Mobile Hamburger Trigger -->
+<button aria-label="Toggle navigation menu" class="md:hidden p-2 rounded-lg text-on-surface-variant hover:bg-surface-container" id="mobile-menu-btn">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu" id="menu-icon">menu</span>
+</button>
+</div>
+<!-- Mobile Navigation Drawer -->
+<div class="hidden md:hidden bg-surface-container-lowest border-b border-outline-variant px-4 pt-3 pb-5 space-y-3" id="mobile-drawer">
+<a class="mobile-nav-link block px-3 py-2 rounded-lg text-label-lg font-label-lg text-primary font-medium bg-surface-container-low" href="#hero">Home</a>
+<a class="mobile-nav-link block px-3 py-2 rounded-lg text-label-lg font-label-lg text-on-surface-variant font-normal hover:bg-surface-container-low" href="#features">Features</a>
+<a class="mobile-nav-link block px-3 py-2 rounded-lg text-label-lg font-label-lg text-on-surface-variant font-normal hover:bg-surface-container-low" href="#how-it-works">How It Works</a>
+<a class="mobile-nav-link block px-3 py-2 rounded-lg text-label-lg font-label-lg text-on-surface-variant font-normal hover:bg-surface-container-low" href="#about">About</a>
+<div class="pt-3 border-t border-outline-variant flex flex-col gap-2">
+<button class="w-full text-center font-label-lg text-label-lg font-medium py-2 rounded-lg text-on-surface bg-surface-container-lowest border border-outline-variant hover:bg-surface-container-low" onclick="window.location.href='/login'">
+          Sign In
+        </button>
+<button class="w-full text-center font-label-lg text-label-lg font-medium py-2 rounded-lg text-on-primary bg-primary-container hover:bg-primary shadow-sm" onclick="window.location.href='/register'">
+          Get Started
+        </button>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="flex-grow">
+<!-- HERO SECTION -->
+<section class="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden" id="hero">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Hero Left Column -->
+<div class="lg:col-span-6 flex flex-col items-start space-y-6">
+<!-- Eyebrow Pill -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container text-primary border border-outline-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-semibold">SMART MEDICATION MANAGEMENT</span>
+</div>
+<!-- Headline -->
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg text-on-surface tracking-tight leading-tight">
+              Stay on Track with Your Medication Routine
+            </h1>
+<!-- Subhead -->
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-xl">
+              MediMate helps you organize medicines, manage reminder schedules, track medication activity, and view your progress from one simple dashboard.
+            </p>
+<!-- Actions -->
+<div class="flex flex-wrap items-center gap-4 pt-2 w-full sm:w-auto">
+<button class="w-full sm:w-auto inline-flex justify-center items-center gap-2 font-label-lg text-label-lg font-medium px-6 py-3 rounded-lg text-on-primary bg-primary-container hover:bg-primary transition-all duration-150 shadow-sm" onclick="window.location.href='/register'">
+<span>Get Started</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="w-full sm:w-auto inline-flex justify-center items-center gap-2 font-label-lg text-label-lg font-medium px-6 py-3 rounded-lg text-on-surface bg-surface-container-lowest border border-outline-variant hover:bg-surface-container-low transition-colors duration-150" onclick="window.location.href='/login'">
+<span>Sign In</span>
+</button>
+</div>
+<!-- Trust / Tagline -->
+<div class="pt-4 border-t border-outline-variant/60 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-on-surface-variant">
+<div class="flex items-center gap-2 font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Simple</span>
+<span class="text-outline-variant">•</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Organized</span>
+<span class="text-outline-variant">•</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Easy to Track</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline italic">
+                A student-designed medication tracking and adherence project.
+              </p>
+</div>
+</div>
+<!-- Hero Right Column (Realistic Dashboard Mockup Card) -->
+<div class="lg:col-span-6">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-5 shadow-sm hover:border-outline/40 transition-all duration-200">
+<!-- Dashboard Header bar inside mockup -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-4 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary font-semibold text-label-lg">
+                    AM
+                  </div>
+<div>
+<h3 class="text-label-lg font-label-lg font-semibold text-on-surface">Good morning, Alex</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant" id="live-date">Monday, Oct 24 • Clinical Regimen</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary border border-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Active Tracker
+                  </span>
+</div>
+</div>
+<!-- Mini KPI Row -->
+<div class="grid grid-cols-4 gap-2 mb-5">
+<div class="bg-surface p-2.5 rounded-lg border border-outline-variant text-center">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface block">4</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Medicines</span>
+</div>
+<div class="bg-surface p-2.5 rounded-lg border border-outline-variant text-center">
+<span class="text-headline-sm font-headline-sm font-bold text-secondary block" id="kpi-taken">1</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Taken</span>
+</div>
+<div class="bg-surface p-2.5 rounded-lg border border-outline-variant text-center">
+<span class="text-headline-sm font-headline-sm font-bold text-amber-600 block" id="kpi-pending">2</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Pending</span>
+</div>
+<div class="bg-surface p-2.5 rounded-lg border border-outline-variant text-center">
+<span class="text-headline-sm font-headline-sm font-bold text-outline block">0</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Skipped</span>
+</div>
+</div>
+<!-- Today's Adherence Progress Widget -->
+<div class="bg-surface p-3.5 rounded-lg border border-outline-variant mb-5">
+<div class="flex justify-between items-center mb-1.5">
+<span class="text-label-md font-label-md font-semibold text-on-surface">Daily Adherence Rate</span>
+<span class="text-label-sm font-label-sm font-bold text-primary" id="progress-percent">75%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-300" id="progress-fill" style="width: 75%"></div>
+</div>
+</div>
+<!-- Dose Cards List -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md font-semibold text-on-surface">Today's Schedule</span>
+<span class="text-label-sm font-label-sm text-outline">Real-time schedule</span>
+</div>
+<!-- Dose Card 1: Vitamin D (Taken) -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest border border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="pill">pill</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-lg font-label-lg font-semibold text-on-surface">Vitamin D3</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Taken</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">1000 IU • 09:00 AM • Morning meal</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-outline font-mono">09:00 AM</span>
+</div>
+<!-- Dose Card 2: Calcium (Interactive Pending -> Taken) -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-surface-container-lowest border border-outline-variant gap-3 transition-colors" id="calcium-dose-card">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="medication">medication</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-lg font-label-lg font-semibold text-on-surface">Calcium Citrate</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200" id="calcium-status">Pending</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">500 mg • 02:00 PM • Take with food</p>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end sm:self-auto">
+<button class="text-label-sm font-label-sm font-medium px-3 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all shadow-sm flex items-center gap-1.5" id="mark-taken-btn" onclick="toggleDoseState()">
+<span class="material-symbols-outlined text-[16px]" data-icon="check">check</span>
+<span>Mark Taken</span>
+</button>
+<button class="text-label-sm font-label-sm font-medium px-3 py-1.5 rounded-lg bg-surface-container-lowest text-error border border-error-container hover:bg-error-container/20 transition-all" onclick="skipDoseNotice()">
+                      Skip
+                    </button>
+</div>
+</div>
+</div>
+<!-- Live micro-instruction -->
+<p class="text-[11px] text-outline text-center mt-3 pt-2 border-t border-outline-variant/60">
+                Interactive preview: use the controls above to see how dose status updates in the dashboard.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURES SECTION (#features) -->
+<section class="py-16 md:py-20 bg-surface-container-lowest border-y border-outline-variant" id="features">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-wider font-semibold">Comprehensive Tools</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight mt-1">
+            Everything You Need to Stay Organized
+          </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">
+            Manage your medication schedule and track your daily activity from one place.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="inventory_2">inventory_2</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Medicine Management</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              Add, edit, and organize your medicines with dosage, frequency, and instructions.
+            </p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="alarm">alarm</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Smart Reminders</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              Set customized reminder schedules for your medicines and stay aware of upcoming doses.
+            </p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="history">history</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Medication History</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              Keep track of doses marked as Taken, Skipped, or Missed in a chronological log.
+            </p>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="bar_chart">bar_chart</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Reports &amp; Insights</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              View weekly adherence percentages and medication status distributions.
+            </p>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications_active">notifications_active</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Notifications &amp; Alerts</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              Receive timely reminders and test alert simulations before dose times elapse.
+            </p>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-6 hover:border-outline/50 transition-all duration-150">
+<div class="w-10 h-10 rounded-lg bg-surface-container text-primary flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[22px]" data-icon="devices">devices</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Responsive &amp; Accessible</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+              Access your medication schedule comfortably across desktop, tablet, and mobile devices.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- HOW IT WORKS SECTION (#how-it-works) -->
+<section class="py-16 md:py-20" id="how-it-works">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-14">
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-wider font-semibold">User Workflow</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight mt-1">
+            How MediMate Works
+          </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">
+            Three simple steps to build and maintain a reliable medication routine.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+<!-- Step 1 -->
+<div class="relative bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary bg-surface-container px-3 py-1 rounded-lg">Step 01</span>
+<span class="material-symbols-outlined text-outline text-[24px]" data-icon="add_circle">add_circle</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Add Your Medicines</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                Enter medicine name, dosage, schedule frequency, and care instructions.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/60 flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+<span>Daily, weekly, or as needed</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary bg-surface-container px-3 py-1 rounded-lg">Step 02</span>
+<span class="material-symbols-outlined text-outline text-[24px]" data-icon="edit_notifications">edit_notifications</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Set Your Reminders</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                Choose single or multiple reminder times tailored to daily intervals.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/60 flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="notifications">notifications</span>
+<span>Custom morning, noon &amp; night</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary bg-surface-container px-3 py-1 rounded-lg">Step 03</span>
+<span class="material-symbols-outlined text-outline text-[24px]" data-icon="task_alt">task_alt</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Track Your Routine</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">
+                Mark medicines as Taken or Skipped directly and review your adherence history.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/60 flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="insights">insights</span>
+<span>Long-term adherence records</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DASHBOARD PREVIEW SECTION -->
+<section class="py-16 md:py-20 bg-surface-container-lowest border-y border-outline-variant">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-wider font-semibold">Live System Interface</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight mt-1">
+            Your Medication Routine at a Glance
+          </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">
+            See today's medicines, upcoming reminders, medication history, and adherence information from a single dashboard.
+          </p>
+</div>
+<!-- Realistic Full Enclosed Dashboard Frame -->
+<div class="rounded-xl border border-outline-variant shadow-sm overflow-hidden bg-background">
+<!-- Mockup Window Bar -->
+<div class="h-10 bg-surface-container border-b border-outline-variant px-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant font-mono">
+              /dashboard
+            </div>
+<div class="w-12"></div>
+</div>
+<!-- Inside the Dashboard Frame: Sidebar + Main Content -->
+<div class="flex flex-col lg:flex-row min-h-[500px]">
+<!-- SideNavBar Simulation -->
+<div class="w-full lg:w-[230px] bg-surface-container-lowest border-r border-outline-variant p-4 flex flex-col justify-between shrink-0">
+<div class="space-y-6">
+<!-- Mini Logo Header -->
+<div class="flex items-center gap-2 pb-3 border-b border-outline-variant">
+<div class="w-7 h-7 rounded bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" data-icon="medication">medication</span>
+</div>
+<span class="text-headline-sm font-headline-sm font-bold text-primary">MediMate</span>
+</div>
+<!-- Tabs matching JSON -->
+<nav class="space-y-1">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high text-primary font-medium">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span class="text-label-lg font-label-lg">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-normal">
+<span class="material-symbols-outlined text-[18px]" data-icon="medication">medication</span>
+<span class="text-label-lg font-label-lg">Medicines</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-normal">
+<span class="material-symbols-outlined text-[18px]" data-icon="history">history</span>
+<span class="text-label-lg font-label-lg">History</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-normal">
+<span class="material-symbols-outlined text-[18px]" data-icon="bar_chart">bar_chart</span>
+<span class="text-label-lg font-label-lg">Reports</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-normal">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+<span class="text-label-lg font-label-lg">Settings</span>
+</div>
+</nav>
+</div>
+<!-- Footer tab from JSON -->
+<div class="pt-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-normal">
+<span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+<span class="text-label-lg font-label-lg">Logout</span>
+</div>
+</div>
+</div>
+<!-- Dashboard Content Canvas -->
+<div class="flex-grow p-6 bg-background space-y-6">
+<!-- Top Header Simulation matching JSON -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-outline-variant gap-4 bg-surface-container-lowest p-4 rounded-lg">
+<div>
+<h3 class="text-headline-sm font-headline-sm font-semibold text-on-surface">Alex Morgan • Daily Schedule</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Scheduled Regimen: Week 42</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container relative">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary-container"></span>
+</button>
+<div class="flex items-center gap-2 pl-3 border-l border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-surface-container text-primary font-semibold text-label-sm flex items-center justify-center">
+                      AM
+                    </div>
+<span class="text-label-md font-label-md font-medium text-on-surface hidden sm:inline">Alex Morgan</span>
+</div>
+</div>
+</div>
+<!-- Content Bento -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Schedule Table (2 Cols) -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-lg border border-outline-variant p-4">
+<div class="flex items-center justify-between mb-3">
+<h4 class="text-label-lg font-label-lg font-semibold text-on-surface">Medication Regimen</h4>
+<span class="text-label-sm font-label-sm text-outline">4 Active Items</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-outline-variant text-[11px] font-semibold text-outline uppercase tracking-wider">
+<th class="py-2 px-3">Time</th>
+<th class="py-2 px-3">Medicine</th>
+<th class="py-2 px-3">Dosage</th>
+<th class="py-2 px-3">Instructions</th>
+<th class="py-2 px-3">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant text-body-sm font-body-sm">
+<tr>
+<td class="py-2.5 px-3 font-semibold text-on-surface">08:00 AM</td>
+<td class="py-2.5 px-3 font-medium text-on-surface">Metformin</td>
+<td class="py-2.5 px-3 text-on-surface-variant">500 mg</td>
+<td class="py-2.5 px-3 text-outline">With breakfast</td>
+<td class="py-2.5 px-3">
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">Taken</span>
+</td>
+</tr>
+<tr>
+<td class="py-2.5 px-3 font-semibold text-on-surface">09:00 AM</td>
+<td class="py-2.5 px-3 font-medium text-on-surface">Vitamin D3</td>
+<td class="py-2.5 px-3 text-on-surface-variant">1000 IU</td>
+<td class="py-2.5 px-3 text-outline">After food</td>
+<td class="py-2.5 px-3">
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">Taken</span>
+</td>
+</tr>
+<tr>
+<td class="py-2.5 px-3 font-semibold text-on-surface">02:00 PM</td>
+<td class="py-2.5 px-3 font-medium text-on-surface">Calcium Citrate</td>
+<td class="py-2.5 px-3 text-on-surface-variant">500 mg</td>
+<td class="py-2.5 px-3 text-outline">Take with water</td>
+<td class="py-2.5 px-3">
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold">Pending</span>
+</td>
+</tr>
+<tr>
+<td class="py-2.5 px-3 font-semibold text-on-surface">08:00 PM</td>
+<td class="py-2.5 px-3 font-medium text-on-surface">Atorvastatin</td>
+<td class="py-2.5 px-3 text-on-surface-variant">20 mg</td>
+<td class="py-2.5 px-3 text-outline">At bedtime</td>
+<td class="py-2.5 px-3">
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold">Scheduled</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Adherence Summary Widget (1 Col) -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-4 flex flex-col justify-between">
+<div>
+<h4 class="text-label-lg font-label-lg font-semibold text-on-surface mb-1">Weekly Summary</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-4">Adherence target: 90%</p>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-label-sm font-label-sm mb-1">
+<span class="text-on-surface">Consistency Score</span>
+<span class="font-bold text-primary">92%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div class="pt-3 border-t border-outline-variant space-y-2">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Total Doses Scheduled</span>
+<span class="font-semibold text-on-surface">28</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Logged on Time</span>
+<span class="font-semibold text-secondary">26</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Missed or Skipped</span>
+<span class="font-semibold text-outline">2</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant">
+<span class="text-[12px] text-secondary flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
+                      On track for weekly goal
+                    </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section CTA Button -->
+<div class="mt-8 text-center">
+<button class="inline-flex items-center gap-2 font-label-lg text-label-lg font-medium px-6 py-3 rounded-lg text-on-primary bg-primary-container hover:bg-primary transition-all duration-150 shadow-sm" onclick="window.location.href='/register'">
+<span>Explore MediMate</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ABOUT SECTION (#about) -->
+<section class="py-16 md:py-20" id="about">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-8 md:p-10 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-outline-variant">
+<div>
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-wider font-semibold">Academic Origin</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight mt-1">
+                About MediMate
+              </h2>
+</div>
+<div class="self-start sm:self-auto">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container text-primary font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="school">school</span>
+                B.S. Biomedical Computing / Capstone Design Thinking Project
+              </span>
+</div>
+</div>
+<div class="pt-6 space-y-4 text-body-lg font-body-lg text-on-surface-variant">
+<p>
+              MediMate is a smart medicine reminder dashboard designed as a college software and Design Thinking project to make medication routines easier to organize and track. It brings medicine schedules, timely reminders, medication history logs, and adherence reports together into a calm, accessible interface.
+            </p>
+<p>
+              Developed under human-centered design principles, this project addresses common compliance hurdles faced by students, elderly patients, and busy caregivers. By eschewing confusing medical jargon and cognitive overload, the system maintains strict fidelity to authentic pharmaceutical charting metaphors.
+            </p>
+</div>
+<!-- Academic Pillars -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 mt-6 border-t border-outline-variant text-center">
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[24px] mb-1" data-icon="psychology">psychology</span>
+<p class="text-label-md font-label-md font-semibold text-on-surface">Cognitive Ease</p>
+<p class="text-body-sm font-body-sm text-outline">Minimal mental friction</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[24px] mb-1" data-icon="fact_check">fact_check</span>
+<p class="text-label-md font-label-md font-semibold text-on-surface">Regimen Clarity</p>
+<p class="text-body-sm font-body-sm text-outline">Clear dose status</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[24px] mb-1" data-icon="lock">lock</span>
+<p class="text-label-md font-label-md font-semibold text-on-surface">Privacy First</p>
+<p class="text-body-sm font-body-sm text-outline">Account-based privacy</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CALL TO ACTION (CTA) SECTION -->
+<section class="pb-16 md:pb-24">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-8 md:p-12 text-center shadow-sm">
+<div class="max-w-2xl mx-auto space-y-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container text-primary flex items-center justify-center mx-auto mb-2">
+<span class="material-symbols-outlined text-[28px]" data-icon="event_note">event_note</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
+              Ready to Organize Your Medication Schedule?
+            </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+              Create your MediMate account and start managing your medicine routine in one place.
+            </p>
+<div class="flex flex-wrap justify-center items-center gap-4 pt-4">
+<button class="w-full sm:w-auto inline-flex justify-center items-center gap-2 font-label-lg text-label-lg font-medium px-6 py-3 rounded-lg text-on-primary bg-primary-container hover:bg-primary transition-all duration-150 shadow-sm" onclick="window.location.href='/register'">
+<span>Get Started</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="w-full sm:w-auto inline-flex justify-center items-center gap-2 font-label-lg text-label-lg font-medium px-6 py-3 rounded-lg text-on-surface bg-surface-container-lowest border border-outline-variant hover:bg-surface-container-low transition-colors duration-150" onclick="window.location.href='/login'">
+<span>Sign In</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FOOTER -->
+<footer class="w-full py-6 bg-surface border-t border-outline-variant">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+<!-- Top Row -->
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="medication">medication</span>
+</div>
+<span class="text-label-md font-label-md font-semibold text-on-surface">MediMate</span>
+<span class="text-body-sm font-body-sm text-outline">• Smart Medicine Reminder Dashboard</span>
+</div>
+<nav class="flex flex-wrap items-center justify-center gap-6 text-body-sm font-body-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#hero">Home</a>
+<a class="hover:text-primary transition-colors" href="#features">Features</a>
+<a class="hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+<a class="hover:text-primary transition-colors" href="#about">About</a>
+<button class="hover:text-primary transition-colors" onclick="window.location.href='/login'">Sign In</button>
+<button class="hover:text-primary transition-colors" onclick="window.location.href='/register'">Get Started</button>
+</nav>
+</div>
+<!-- Mandatory Disclaimer & Copyright Row -->
+<div class="pt-4 border-t border-outline-variant/60 flex flex-col md:flex-row justify-between items-center gap-3 text-center md:text-left">
+<p class="text-body-sm font-body-sm text-outline max-w-3xl">
+          MediMate is a medication reminder and tracking tool. It does not provide medical advice or replace professional medical guidance.
+        </p>
+<p class="text-label-sm font-label-sm text-on-surface-variant shrink-0">
+          © 2026 MediMate. Academic Software Project.
+        </p>
+</div>
+</div>
+</footer>
+<!-- AUTHENTICATION DIALOG / MODAL (No dead links) -->
+
+<!-- INTERACTIVE PROTOTYPE JAVASCRIPT -->
+<script>
+    // 1. Mobile Menu Toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+    const menuIcon = document.getElementById('menu-icon');
+
+    mobileBtn.addEventListener('click', () => {
+      const isExpanded = !mobileDrawer.classList.contains('hidden');
+      if (isExpanded) {
+        mobileDrawer.classList.add('hidden');
+        menuIcon.textContent = 'menu';
+      } else {
+        mobileDrawer.classList.remove('hidden');
+        menuIcon.textContent = 'close';
+      }
+    });
+
+    // Close mobile drawer when clicking any link
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileDrawer.classList.add('hidden');
+        menuIcon.textContent = 'menu';
+      });
+    });
+
+    // 2. Interactive "Mark Taken" / "Skip" Demo in Hero Preview
+    let calciumTaken = false;
+    function toggleDoseState() {
+      const statusPill = document.getElementById('calcium-status');
+      const actionBtn = document.getElementById('mark-taken-btn');
+      const kpiTaken = document.getElementById('kpi-taken');
+      const kpiPending = document.getElementById('kpi-pending');
+      const progressPercent = document.getElementById('progress-percent');
+      const progressFill = document.getElementById('progress-fill');
+
+      if (!calciumTaken) {
+        calciumTaken = true;
+        statusPill.textContent = 'Taken';
+        statusPill.className = 'text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+        actionBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]" data-icon="undo">undo</span><span>Undo</span>';
+        actionBtn.className = 'text-label-sm font-label-sm font-medium px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-all';
+        
+        kpiTaken.textContent = '2';
+        kpiPending.textContent = '1';
+        progressPercent.textContent = '100%';
+        progressFill.style.width = '100%';
+      } else {
+        calciumTaken = false;
+        statusPill.textContent = 'Pending';
+        statusPill.className = 'text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200';
+        actionBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]" data-icon="check">check</span><span>Mark Taken</span>';
+        actionBtn.className = 'text-label-sm font-label-sm font-medium px-3 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-all shadow-sm flex items-center gap-1.5';
+        
+        kpiTaken.textContent = '1';
+        kpiPending.textContent = '2';
+        progressPercent.textContent = '75%';
+        progressFill.style.width = '75%';
+      }
+    }
+
+    function skipDoseNotice() {
+      const statusPill = document.getElementById('calcium-status');
+      statusPill.textContent = 'Skipped';
+      statusPill.className = 'text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-red-50 text-error border border-error-container';
+      setTimeout(() => {
+        alert('Preview updated to show a skipped dose. Your account data is not changed.');
+      }, 100);
+    }
+
+    // 3. Dynamic current date display for realism
+    const today = new Date();
+    const options = { weekday: 'long', month: 'short', day: 'numeric' };
+    const dateStr = today.toLocaleDateString('en-US', options);
+    const dateElem = document.getElementById('live-date');
+    if (dateElem) {
+      dateElem.textContent = `${dateStr} • Clinical Regimen`;
+    }
+
+</script>
+</body></html>

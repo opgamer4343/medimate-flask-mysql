@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>MediMate – Medication Reminder Dashboard</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Font: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#263143",
+            "primary-fixed": "#dbe1ff",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed": "#0b1c30",
+            "on-tertiary-container": "#e9f0ff",
+            "on-primary-fixed": "#00174b",
+            "surface-container-high": "#dee8ff",
+            "on-secondary-container": "#006f66",
+            "outline-variant": "#c3c6d7",
+            "on-secondary-fixed": "#00201d",
+            "on-surface": "#111c2d",
+            "inverse-primary": "#b4c5ff",
+            "background": "#f9f9ff",
+            "on-surface-variant": "#434655",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#6bd8cb",
+            "tertiary": "#46566c",
+            "on-background": "#111c2d",
+            "on-error-container": "#93000a",
+            "error-container": "#ffdad6",
+            "inverse-on-surface": "#ecf1ff",
+            "on-secondary-fixed-variant": "#005049",
+            "tertiary-container": "#5e6e85",
+            "surface-container-highest": "#d8e3fb",
+            "on-tertiary-fixed-variant": "#38485d",
+            "surface-dim": "#cfdaf2",
+            "surface-tint": "#0053db",
+            "tertiary-fixed-dim": "#b7c8e1",
+            "surface-container-low": "#f0f3ff",
+            "secondary-fixed": "#89f5e7",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed": "#d3e4fe",
+            "surface-container": "#e7eeff",
+            "outline": "#737686",
+            "error": "#ba1a1a",
+            "secondary": "#006a61",
+            "secondary-container": "#86f2e4",
+            "primary": "#004ac6",
+            "primary-container": "#2563eb",
+            "primary-fixed-dim": "#b4c5ff",
+            "on-primary-container": "#eeefff",
+            "on-primary-fixed-variant": "#003ea8",
+            "surface": "#f9f9ff",
+            "surface-variant": "#d8e3fb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "gutter": "1.5rem",
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "1rem",
+            "space-xs": "0.25rem",
+            "margin": "2rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"]
+          },
+          "fontSize": {
+            "display-lg-mobile": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+            "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+            "body-lg": ["15px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-sm": ["18px", {"lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "body-sm": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}]
+          }
+        }
+      }
+    }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .custom-shadow-card {
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  }
+  [v-cloak] { display: none; }
+</style>
+</head>
+<body class="bg-[#f8fafc] text-on-surface antialiased font-body-md text-body-md min-h-screen flex flex-col">
+<!-- Mobile Menu Backdrop -->
+<div class="fixed inset-0 bg-slate-900/40 z-30 hidden md:hidden" id="mobile-backdrop" onclick="toggleMobileSidebar()"></div>
+<!-- App Layout Shell -->
+<div class="flex flex-1 min-h-screen" id="app-shell">
+<!-- SideNavBar Component -->
+<aside class="fixed top-0 left-0 h-screen w-[230px] z-40 bg-surface-container-lowest border-r border-outline-variant transition-transform duration-200 ease-in-out -translate-x-full md:translate-x-0" id="sidebar">
+<div class="flex flex-col justify-between h-full p-4 w-[230px]">
+<!-- Brand & Top Nav Cluster -->
+<div class="flex flex-col gap-6">
+<!-- Logo / App Identity -->
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('dashboard')">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="medication">medication</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary leading-tight">MediMate</h1>
+<p class="text-label-sm font-label-sm text-outline">Clinical Tracker</p>
+</div>
+</div>
+<!-- Close button for mobile -->
+<button class="md:hidden text-outline hover:text-on-surface p-1" onclick="toggleMobileSidebar()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Navigation Tabs -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1.5" id="nav-container">
+<button class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high text-primary font-medium transition-colors duration-150 ease-in-out text-left w-full" data-nav="dashboard" onclick="navigateTo('dashboard')">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="text-label-lg font-label-lg">Dashboard</span>
+</button>
+<button class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-normal transition-colors duration-150 ease-in-out text-left w-full" data-nav="medicines" onclick="navigateTo('medicines')">
+<span class="material-symbols-outlined text-[20px]" data-icon="medication">medication</span>
+<span class="text-label-lg font-label-lg">Medicines</span>
+</button>
+<button class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-normal transition-colors duration-150 ease-in-out text-left w-full" data-nav="history" onclick="navigateTo('history')">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+<span class="text-label-lg font-label-lg">History</span>
+</button>
+<button class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-normal transition-colors duration-150 ease-in-out text-left w-full" data-nav="reports" onclick="navigateTo('reports')">
+<span class="material-symbols-outlined text-[20px]" data-icon="bar_chart">bar_chart</span>
+<span class="text-label-lg font-label-lg">Reports</span>
+</button>
+<button class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-normal transition-colors duration-150 ease-in-out text-left w-full" data-nav="settings" onclick="navigateTo('settings')">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="text-label-lg font-label-lg">Settings</span>
+</button>
+</nav>
+</div>
+<!-- Footer Action -->
+<div class="pt-4 border-t border-outline-variant space-y-2">
+<button class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-error font-normal transition-colors duration-150 ease-in-out w-full text-left" onclick="handleLogout()">
+<span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+<span class="text-label-lg font-label-lg">Logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Canvas Wrapper -->
+<div class="flex-1 md:ml-[230px] min-h-screen flex flex-col bg-[#f8fafc]">
+<!-- TopNavBar Component -->
+<header class="sticky top-0 z-20 bg-surface-container-lowest border-b border-outline-variant h-16">
+<div class="flex justify-between items-center h-16 px-4 md:px-8">
+<!-- Left Greeting & Patient Context -->
+<div class="flex items-center gap-3">
+<button aria-label="Toggle Menu" class="md:hidden p-2 rounded-lg text-on-surface-variant hover:bg-surface-container" onclick="toggleMobileSidebar()">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<div>
+<div class="flex items-baseline gap-2">
+<h2 class="text-headline-md font-headline-md text-on-surface font-bold" id="header-greeting">Good morning, Alex</h2>
+<span class="text-body-sm font-body-sm text-outline hidden sm:inline">•</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant hidden sm:inline" id="header-subtext">Here’s your medicine schedule for today.</span>
+</div>
+<p class="text-label-sm font-label-sm text-outline" id="header-date">Loading today’s date…</p>
+</div>
+</div>
+<!-- Right Trailing Cluster -->
+<div class="flex items-center gap-3 sm:gap-4 relative">
+<!-- Simulation Shortcut -->
+<button class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-label-sm font-semibold rounded-lg bg-surface-container text-primary hover:bg-surface-container-high transition-colors" onclick="openReminderModal()" title="Simulate Due Dose Alert">
+<span class="material-symbols-outlined text-[16px]">alarm</span>
+<span>Test Alert</span>
+</button>
+<!-- Notification Bell with Active Indicator Dot -->
+<div class="relative">
+<button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150 ease-in-out" id="notif-btn" onclick="toggleNotificationDropdown()" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest" id="notif-dot"></span>
+</button>
+<!-- Notification Dropdown Menu -->
+<div class="hidden absolute right-0 mt-2 w-80 sm:w-88 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-50 overflow-hidden" id="notif-dropdown">
+<div class="p-3 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<span class="font-semibold text-label-lg text-on-surface">Notifications</span>
+<button class="text-xs text-primary font-medium hover:underline" onclick="markAllNotificationsRead()">Mark all read</button>
+</div>
+<div class="max-h-72 overflow-y-auto divide-y divide-outline-variant/40" id="notif-list">
+<!-- Dynamically populated -->
+</div>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-6 w-px bg-outline-variant"></div>
+<!-- User Identity Badge & Dropdown -->
+<div class="relative">
+<button class="flex items-center gap-2.5 p-1 rounded-lg hover:bg-surface-container-low text-left" onclick="toggleProfileDropdown()">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-label-sm font-label-sm font-semibold" id="user-avatar-initials">
+                AM
+              </div>
+<div class="hidden md:block text-left">
+<p class="text-label-lg font-label-lg text-on-surface leading-tight font-medium" id="user-display-name">Alex Morgan</p>
+<p class="text-label-sm font-label-sm text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block"></span>
+                  Active Regimen
+                </p>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline hidden md:inline">expand_more</span>
+</button>
+<!-- Profile Dropdown -->
+<div class="hidden absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-50 overflow-hidden py-1" id="profile-dropdown">
+<div class="px-4 py-2 border-b border-outline-variant bg-surface-container-low">
+<p class="font-semibold text-sm text-on-surface" id="menu-user-name">Alex Morgan</p>
+<p class="text-xs text-outline truncate" id="menu-user-email">alex.morgan@university.edu</p>
+</div>
+<a class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:bg-surface-container" href="javascript:void(0)" onclick="navigateTo('settings'); toggleProfileDropdown();">
+<span class="material-symbols-outlined text-[18px]">person</span> Profile &amp; Settings
+              </a>
+<a class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:bg-surface-container" href="javascript:void(0)" onclick="openReminderModal(); toggleProfileDropdown();">
+<span class="material-symbols-outlined text-[18px]">alarm</span> Trigger Demo Alert
+              </a>
+<div class="border-t border-outline-variant my-1"></div>
+<a class="flex items-center gap-2 px-4 py-2 text-sm text-error hover:bg-red-50" href="javascript:void(0)" onclick="handleLogout()">
+<span class="material-symbols-outlined text-[18px]">logout</span> Log Out
+              </a>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Container with Multiple Switchable Views -->
+<main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+<!-- ================= VIEW 1: DASHBOARD ================= -->
+<div class="space-y-6 view-section" id="view-dashboard">
+<!-- 1. Four Compact Statistic Cards in a Grid -->
+<section aria-label="Daily Dosage Statistics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat 1: Total Medicines -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card flex items-center justify-between">
+<div>
+<p class="text-headline-lg font-headline-lg text-primary leading-tight" id="stat-total-medicines">4</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-0.5">Total Medicines</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="medication">medication</span>
+</div>
+</div>
+<!-- Stat 2: Taken Today -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card flex items-center justify-between">
+<div>
+<p class="text-headline-lg font-headline-lg text-secondary leading-tight" id="stat-taken-today">2</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-0.5">Taken Today</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+<!-- Stat 3: Pending -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card flex items-center justify-between">
+<div>
+<p class="text-headline-lg font-headline-lg text-[#b45309] leading-tight" id="stat-pending-today">1</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-0.5">Pending</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-[#fef3c7] flex items-center justify-center text-[#b45309]">
+<span class="material-symbols-outlined text-[20px]" data-icon="schedule">schedule</span>
+</div>
+</div>
+<!-- Stat 4: Skipped -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card flex items-center justify-between">
+<div>
+<p class="text-headline-lg font-headline-lg text-error leading-tight" id="stat-skipped-today">1</p>
+<p class="text-label-md font-label-md text-on-surface-variant mt-0.5">Skipped</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[20px]" data-icon="error">error</span>
+</div>
+</div>
+</section>
+<!-- 2. Two-Column Mid-Section -->
+<section aria-label="Progress and Immediate Action" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Left Card: Today's Progress -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 custom-shadow-card flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-2">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Today's Progress</h3>
+<span class="text-label-sm font-label-sm text-outline font-medium">Routine Tracker</span>
+</div>
+<div class="flex items-baseline gap-2 mb-3">
+<span class="text-display-lg font-display-lg text-primary font-bold" id="progress-percentage-text">75%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">adherence rate</span>
+</div>
+<!-- Progress Bar Track -->
+<div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-3">
+<div class="bg-primary-container h-2.5 rounded-full transition-all duration-300" id="progress-bar-fill" style="width: 75%;"></div>
+</div>
+</div>
+<div class="pt-2 border-t border-outline-variant/60 flex items-center justify-between">
+<p class="text-body-sm font-body-sm text-on-surface-variant" id="progress-summary-count">3 of 4 scheduled medicines completed</p>
+<span class="text-label-sm font-label-sm text-secondary font-semibold" id="progress-status-badge">On Track</span>
+</div>
+</div>
+<!-- Right Card: Next Medicine -->
+<div class="bg-surface-container-low border border-primary/20 rounded-xl p-5 custom-shadow-card flex flex-col justify-between relative overflow-hidden" id="next-medicine-card">
+<!-- Content will be injected dynamically -->
+</div>
+</section>
+<!-- 3. 'Today's Schedule' Clean Table Card -->
+<section aria-label="Full Medication Schedule" class="bg-surface-container-lowest border border-outline-variant rounded-xl custom-shadow-card overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Today's Schedule</h3>
+<span class="text-label-sm font-label-sm text-outline" id="today-schedule-count">3 items scheduled</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant text-label-sm font-label-sm text-outline">
+<th class="py-3 px-6 font-semibold" scope="col">Medicine</th>
+<th class="py-3 px-6 font-semibold" scope="col">Dosage</th>
+<th class="py-3 px-6 font-semibold" scope="col">Time</th>
+<th class="py-3 px-6 font-semibold" scope="col">Instructions</th>
+<th class="py-3 px-6 font-semibold" scope="col">Status</th>
+<th class="py-3 px-6 font-semibold text-right" scope="col">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50 text-body-md font-body-md" id="schedule-tbody">
+<!-- Dynamically populated -->
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- ================= VIEW 2: MEDICINES LIST ================= -->
+<div class="space-y-6 view-section hidden" id="view-medicines">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl custom-shadow-card p-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-outline-variant">
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface">Medicines Catalog</h2>
+<p class="text-body-sm text-on-surface-variant">Manage prescriptions, course dates, and daily dose schedules.</p>
+</div>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-container text-on-primary hover:bg-primary rounded-lg text-label-lg font-medium transition-colors shadow-sm self-start sm:self-auto" onclick="openAddMedicineForm()">
+<span class="material-symbols-outlined text-[18px]">add</span> Add Medicine
+            </button>
+</div>
+<!-- Controls: Search & Filter Tabs -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6">
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-lg border border-outline-variant text-body-sm bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary outline-none" id="medicine-search-input" oninput="renderMedicinesCatalog()" placeholder="Search by name, dosage..." type="text"/>
+</div>
+<!-- Filter tabs -->
+<div class="flex items-center gap-1 p-1 bg-surface-container rounded-lg self-stretch md:self-auto overflow-x-auto" id="medicine-filter-tabs">
+<button class="med-filter-btn px-3 py-1.5 text-xs font-semibold rounded bg-surface-container-lowest text-primary shadow-sm" onclick="setMedicineFilter('All')">All</button>
+<button class="med-filter-btn px-3 py-1.5 text-xs font-semibold rounded text-on-surface-variant hover:text-on-surface" onclick="setMedicineFilter('Active')">Active</button>
+<button class="med-filter-btn px-3 py-1.5 text-xs font-semibold rounded text-on-surface-variant hover:text-on-surface" onclick="setMedicineFilter('Completed')">Completed</button>
+<button class="med-filter-btn px-3 py-1.5 text-xs font-semibold rounded text-on-surface-variant hover:text-on-surface" onclick="setMedicineFilter('Expired')">Expired</button>
+</div>
+</div>
+<!-- Medicine Table -->
+<div class="mt-6 overflow-x-auto border border-outline-variant rounded-lg">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant text-label-sm text-outline">
+<th class="py-3 px-5 font-semibold">Medicine Name</th>
+<th class="py-3 px-5 font-semibold">Dosage</th>
+<th class="py-3 px-5 font-semibold">Frequency</th>
+<th class="py-3 px-5 font-semibold">Instructions</th>
+<th class="py-3 px-5 font-semibold">Course Period</th>
+<th class="py-3 px-5 font-semibold">Status</th>
+<th class="py-3 px-5 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50 text-body-sm" id="catalog-tbody">
+<!-- Dynamically populated -->
+</tbody>
+</table>
+</div>
+<div class="hidden text-center py-12 text-outline" id="catalog-empty-msg">
+<span class="material-symbols-outlined text-4xl mb-2 text-outline-variant">medication</span>
+<p>No medicines found matching the selected filter or search query.</p>
+</div>
+</div>
+</div>
+<!-- ================= VIEW 3: ADD / EDIT MEDICINE FORM ================= -->
+<div class="space-y-6 view-section hidden" id="view-add-edit-medicine">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl custom-shadow-card p-6 max-w-3xl mx-auto">
+<div class="flex items-center justify-between pb-4 border-b border-outline-variant mb-6">
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface" id="form-title">Add New Medicine</h2>
+<p class="text-body-sm text-on-surface-variant">Fill in dosage, administration timings, and treatment window.</p>
+</div>
+<button class="p-2 text-outline hover:text-on-surface rounded-lg hover:bg-surface-container" onclick="navigateTo('medicines')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-5" id="medicine-form" onsubmit="handleSaveMedicine(event)">
+<input id="medicine-id-field" type="hidden" value=""/>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Medicine Name *</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" id="input-med-name" placeholder="e.g., Vitamin D3, Amoxicillin" required="" type="text"/>
+<p class="text-xs text-error mt-1 hidden" id="err-med-name">Please provide a valid medicine name.</p>
+</div>
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Dosage Form &amp; Strength *</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" id="input-med-dosage" placeholder="e.g., 1 Tablet (1000 IU), 500mg" required="" type="text"/>
+<p class="text-xs text-error mt-1 hidden" id="err-med-dosage">Please provide dosage specification.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Frequency *</label>
+<select class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest" id="input-med-frequency" onchange="handleFrequencyChange()">
+<option value="Once Daily">Once Daily</option>
+<option value="Twice Daily">Twice Daily</option>
+<option value="Three Times Daily">Three Times Daily</option>
+<option value="As Needed">As Needed (PRN)</option>
+</select>
+</div>
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Special Instructions</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" id="input-med-instructions" placeholder="e.g., After breakfast with plenty of water" type="text"/>
+</div>
+</div>
+<!-- Dynamic Timings Section based on Frequency -->
+<div class="bg-surface-container-low p-4 rounded-lg border border-outline-variant/60" id="dynamic-times-container">
+<label class="block text-label-sm font-semibold text-on-surface mb-2">Reminder Timing Schedule</label>
+<div class="flex flex-wrap gap-3" id="times-inputs-wrapper">
+<!-- Dynamically inserted time inputs -->
+</div>
+<p class="text-body-sm text-outline hidden" id="as-needed-hint">This medicine is taken as needed and does not require a fixed scheduled alarm.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Start Date *</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" id="input-med-start" required="" type="date"/>
+</div>
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">End Date *</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none" id="input-med-end" required="" type="date"/>
+<p class="text-xs text-error mt-1 hidden" id="err-dates">End date cannot be prior to start date.</p>
+</div>
+</div>
+<div class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant">
+<button class="px-4 py-2 border border-outline-variant rounded-lg text-label-lg font-medium text-on-surface-variant hover:bg-surface-container transition-colors" onclick="navigateTo('medicines')" type="button">
+                Cancel
+              </button>
+<button class="px-5 py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary text-label-lg font-semibold transition-colors shadow-sm" type="submit">
+                Save Medicine
+              </button>
+</div>
+</form>
+</div>
+</div>
+<!-- ================= VIEW 4: MEDICATION HISTORY ================= -->
+<div class="space-y-6 view-section hidden" id="view-history">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl custom-shadow-card p-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-outline-variant">
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface">Medication History</h2>
+<p class="text-body-sm text-on-surface-variant">Review medication logs, adherence marks, intake times, and personal medication records.</p>
+</div>
+<!-- Export Buttons -->
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-2 border border-outline-variant hover:bg-surface-container text-on-surface rounded-lg text-label-md font-medium transition-colors" onclick="exportHistoryCSV()">
+<span class="material-symbols-outlined text-[18px]">download</span> Export CSV
+              </button>
+</div>
+</div>
+<!-- Filter Controls -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-6 items-end">
+<div>
+<label class="block text-xs font-semibold text-outline mb-1">Filter by Search</label>
+<input class="w-full px-3 py-1.5 text-xs rounded-lg border border-outline-variant focus:border-primary outline-none" id="history-filter-search" oninput="renderHistoryTable()" placeholder="Medicine, notes..." type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-outline mb-1">Filter by Medicine</label>
+<select class="w-full px-3 py-1.5 text-xs rounded-lg border border-outline-variant focus:border-primary outline-none bg-surface-container-lowest" id="history-filter-med" onchange="renderHistoryTable()">
+<option value="All">All Medicines</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-semibold text-outline mb-1">Filter by Status</label>
+<select class="w-full px-3 py-1.5 text-xs rounded-lg border border-outline-variant focus:border-primary outline-none bg-surface-container-lowest" id="history-filter-status" onchange="renderHistoryTable()">
+<option value="All">All Statuses</option>
+<option value="Taken">Taken</option>
+<option value="Skipped">Skipped</option>
+<option value="Missed">Missed</option>
+<option value="Pending">Pending</option>
+</select>
+</div>
+<div>
+<button class="w-full py-1.5 px-3 rounded-lg border border-outline-variant text-xs font-medium text-on-surface-variant hover:bg-surface-container flex items-center justify-center gap-1" onclick="resetHistoryFilters()">
+<span class="material-symbols-outlined text-[14px]">restart_alt</span> Reset Filters
+              </button>
+</div>
+</div>
+<!-- History Table -->
+<div class="mt-6 overflow-x-auto border border-outline-variant rounded-lg">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant text-label-sm text-outline">
+<th class="py-3 px-5 font-semibold">Date</th>
+<th class="py-3 px-5 font-semibold">Medicine</th>
+<th class="py-3 px-5 font-semibold">Dosage</th>
+<th class="py-3 px-5 font-semibold">Scheduled</th>
+<th class="py-3 px-5 font-semibold">Status</th>
+<th class="py-3 px-5 font-semibold">Logged Intake</th>
+<th class="py-3 px-5 font-semibold">Clinical Notes</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50 text-body-sm" id="history-tbody">
+<!-- Dynamically populated -->
+</tbody>
+</table>
+</div>
+<div class="hidden text-center py-12 text-outline" id="history-empty-msg">
+<span class="material-symbols-outlined text-4xl mb-2 text-outline-variant">history_toggle_off</span>
+<p>No medication records found. Try changing your filters.</p>
+</div>
+</div>
+</div>
+<!-- ================= VIEW 5: REPORTS & ADHERENCE ================= -->
+<div class="space-y-6 view-section hidden" id="view-reports">
+<!-- Reports Stat summary cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card">
+<p class="text-label-md text-on-surface-variant">Overall Adherence</p>
+<p class="text-headline-lg font-bold text-primary mt-1" id="report-adherence-pct">83%</p>
+<p class="text-xs text-secondary font-medium mt-1">Based on your logged medication history</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card">
+<p class="text-label-md text-on-surface-variant">Total Doses Taken</p>
+<p class="text-headline-lg font-bold text-secondary mt-1" id="report-doses-taken">5</p>
+<p class="text-xs text-outline mt-1">Successfully confirmed</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card">
+<p class="text-label-md text-on-surface-variant">Doses Skipped</p>
+<p class="text-headline-lg font-bold text-error mt-1" id="report-doses-skipped">1</p>
+<p class="text-xs text-outline mt-1">Self-reported by user</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 custom-shadow-card">
+<p class="text-label-md text-on-surface-variant">Missed Dosages</p>
+<p class="text-headline-lg font-bold text-outline mt-1" id="report-doses-missed">1</p>
+<p class="text-xs text-outline mt-1">Scheduled doses not marked as taken</p>
+</div>
+</div>
+<!-- Visual Analytics Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Weekly Adherence Chart -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 custom-shadow-card">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-bold text-headline-sm text-on-surface">Weekly Adherence Rate</h3>
+<p class="text-xs text-outline">Percentage completed per weekday</p>
+</div>
+<span class="material-symbols-outlined text-outline">analytics</span>
+</div>
+<!-- Custom Clean SVG Bar Chart -->
+<div class="w-full h-56 flex items-end justify-between px-4 pt-6 pb-2 bg-surface-container-low/50 rounded-lg" id="weekly-chart-container">
+<!-- Rendered via JS -->
+</div>
+</div>
+<!-- Status Distribution Donut -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 custom-shadow-card flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<div>
+<h3 class="font-bold text-headline-sm text-on-surface">Intake Distribution</h3>
+<p class="text-xs text-outline">Proportion of logged clinical outcomes</p>
+</div>
+<span class="material-symbols-outlined text-outline">donut_large</span>
+</div>
+<!-- SVG Donut Chart -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-6 py-4">
+<div class="relative w-40 h-40 flex items-center justify-center" id="donut-svg-wrapper">
+<!-- SVG injected via JS -->
+</div>
+<div class="flex flex-col gap-2 text-xs">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[#16a34a]"></span>
+<span class="text-on-surface">Taken (<span id="donut-pct-taken">70%</span>)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[#ba1a1a]"></span>
+<span class="text-on-surface">Skipped (<span id="donut-pct-skipped">15%</span>)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-[#64748b]"></span>
+<span class="text-on-surface">Missed (<span id="donut-pct-missed">15%</span>)</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-center text-outline border-t border-outline-variant/60 pt-3">
+              Generated from your MediMate medication history.
+            </p>
+</div>
+</div>
+</div>
+<!-- ================= VIEW 6: SETTINGS ================= -->
+<div class="space-y-6 view-section hidden" id="view-settings">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl custom-shadow-card p-6 max-w-3xl mx-auto space-y-6">
+<div class="pb-4 border-b border-outline-variant">
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface">Account &amp; System Preferences</h2>
+<p class="text-body-sm text-on-surface-variant">Configure patient identity details, alarm triggers, and notification rules.</p>
+</div>
+<!-- Profile Form -->
+<form class="space-y-4" onsubmit="handleSaveSettingsProfile(event)">
+<h3 class="text-label-lg font-semibold text-on-surface">Patient Profile</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Full Name</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary outline-none" id="settings-name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-label-sm font-medium text-on-surface mb-1">Student / Patient Email</label>
+<input class="w-full px-3 py-2 rounded-lg border border-outline-variant text-body-md focus:border-primary outline-none" id="settings-email" required="" type="email"/>
+</div>
+</div>
+<div>
+<button class="px-4 py-2 bg-primary-container text-on-primary hover:bg-primary rounded-lg text-label-md font-medium transition-colors" type="submit">
+                Save Profile Changes
+              </button>
+</div>
+</form>
+<div class="border-t border-outline-variant pt-6 space-y-4">
+<h3 class="text-label-lg font-semibold text-on-surface">Account Security</h3>
+<div class="flex items-center justify-between gap-4 p-3 rounded-lg border border-outline-variant">
+<div>
+<p class="text-label-md font-medium text-on-surface">Change Password</p>
+<p class="text-xs text-outline">Update your MediMate sign-in password.</p>
+</div>
+<button class="px-3.5 py-1.5 bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface rounded-lg font-medium text-label-md font-label-md transition-colors" type="button" onclick="openChangePasswordModal()">Change Password</button>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-6 space-y-4">
+<h3 class="text-label-lg font-semibold text-on-surface">Reminders &amp; Notification Settings</h3>
+<div class="space-y-3">
+<label class="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer">
+<div>
+<p class="text-label-md font-medium text-on-surface">Medicine Due Reminders</p>
+<p class="text-xs text-outline">Receive timely popups when medication doses are due</p>
+</div>
+<input class="w-5 h-5 text-primary rounded border-outline-variant focus:ring-primary" id="toggle-notif-reminders" onchange="handleSaveNotificationToggles()" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer">
+<div>
+<p class="text-label-md font-medium text-on-surface">Browser Push Notifications</p>
+<p class="text-xs text-outline">Deliver system tray messages during active study sessions</p>
+</div>
+<input class="w-5 h-5 text-primary rounded border-outline-variant focus:ring-primary" id="toggle-notif-browser" onchange="handleSaveNotificationToggles()" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer">
+<div>
+<p class="text-label-md font-medium text-on-surface">Audible Reminder Chime</p>
+<p class="text-xs text-outline">Play subtle sound alerts at scheduled dose time</p>
+</div>
+<input class="w-5 h-5 text-primary rounded border-outline-variant focus:ring-primary" id="toggle-notif-sound" onchange="handleSaveNotificationToggles()" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer">
+<div>
+<p class="text-label-md font-medium text-on-surface">Daily Schedule Morning Summary</p>
+<p class="text-xs text-outline">Receive an overview notification at 8:00 AM daily</p>
+</div>
+<input class="w-5 h-5 text-primary rounded border-outline-variant focus:ring-primary" id="toggle-notif-summary" onchange="handleSaveNotificationToggles()" type="checkbox"/>
+</label>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 text-xs text-outline flex items-center justify-between">
+<span>Clinical tracker version 2.4.0 (Build 9021)</span>
+<button class="text-error hover:underline" onclick="resetPrototypeData()">Database-backed data</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-4 bg-surface border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-8 gap-2 text-center text-body-sm font-body-sm">
+<p class="text-on-surface-variant">
+          MediMate is a reminder and tracking tool and does not provide medical advice or replace professional medical guidance.
+        </p>
+<div class="flex items-center gap-4 text-label-sm font-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors duration-150" href="javascript:void(0)" onclick="showToast('Privacy Policy: Medical health data stored strictly in local browser sandbox.', 'info')">Privacy Policy</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors duration-150" href="javascript:void(0)" onclick="showToast('Terms of Service: For routine tracking support.', 'info')">Terms of Service</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-primary transition-colors duration-150" href="javascript:void(0)" onclick="showToast('Clinical Disclaimer: Consult your licensed physician regarding prescription changes.', 'info')">Clinical Disclaimer</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<!-- ================= AUTH VIEW (LOGIN & REGISTER) ================= -->
+<div class="hidden min-h-screen bg-[#f8fafc] flex items-center justify-center p-4" id="auth-container">
+<div class="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-2xl custom-shadow-card p-6 sm:p-8 space-y-6">
+<div class="text-center">
+<div class="inline-flex w-12 h-12 rounded-xl bg-primary-container text-on-primary items-center justify-center mb-3">
+<span class="material-symbols-outlined text-[28px]" data-icon="medication">medication</span>
+</div>
+<h2 class="text-2xl font-bold text-on-surface" id="auth-title">Welcome to MediMate</h2>
+<p class="text-xs text-on-surface-variant mt-1" id="auth-subtitle">Sign in to manage your medication regimen</p>
+</div>
+<!-- Login Form -->
+<form class="space-y-4" id="form-login" onsubmit="handleLoginSubmit(event)">
+<div>
+<label class="block text-xs font-semibold text-on-surface mb-1">Student / University Email</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="login-email" placeholder="name@university.edu" required="" type="email"/>
+</div>
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="block text-xs font-semibold text-on-surface">Password</label>
+<span class="text-xs text-outline">Use your registered email and password</span>
+</div>
+<div class="relative">
+<input class="w-full pl-3 pr-10 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="login-password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-2.5 text-outline hover:text-on-surface" onclick="togglePasswordVisibility('login-password', 'login-pw-icon')" type="button">
+<span class="material-symbols-outlined text-[18px]" id="login-pw-icon">visibility</span>
+</button>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-semibold text-sm transition-colors flex items-center justify-center gap-2" id="login-submit-btn" type="submit">
+<span>Sign In</span>
+</button>
+<p class="text-xs text-center text-on-surface-variant">
+        Don’t have an account? 
+        <a class="text-primary font-semibold hover:underline" href="javascript:void(0)" onclick="switchAuthMode('register')">Register cohort account</a>
+</p>
+</form>
+<!-- Register Form -->
+<form class="space-y-4 hidden" id="form-register" onsubmit="handleRegisterSubmit(event)">
+<div>
+<label class="block text-xs font-semibold text-on-surface mb-1">Full Name</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="reg-name" placeholder="Alex Morgan" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface mb-1">Email</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="reg-email" placeholder="alex.morgan@university.edu" required="" type="email"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface mb-1">Password</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="reg-password" minlength="8" placeholder="At least 8 characters" required="" type="password"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-on-surface mb-1">Confirm Password</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-outline-variant focus:border-primary outline-none" id="reg-password-confirm" placeholder="Repeat password" required="" type="password"/>
+<p class="text-xs text-error mt-1 hidden" id="reg-pw-mismatch">Passwords do not match.</p>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-semibold text-sm transition-colors" type="submit">
+        Create Account
+      </button>
+<p class="text-xs text-center text-on-surface-variant">
+        Already registered? 
+        <a class="text-primary font-semibold hover:underline" href="javascript:void(0)" onclick="switchAuthMode('login')">Sign in here</a>
+</p>
+</form>
+</div>
+</div>
+<!-- ================= MODALS ================= -->
+<!-- 1. Medicine Reminder Modal (Triggerable on demand or via schedule) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 hidden" id="modal-reminder">
+<div class="bg-surface-container-lowest rounded-2xl max-w-md w-full border border-outline-variant p-6 shadow-xl space-y-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[28px]">alarm_on</span>
+</div>
+<div>
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-primary-fixed text-on-primary-fixed uppercase tracking-wider mb-1">Due Dose Alert</span>
+<h3 class="text-headline-sm font-bold text-on-surface" id="modal-reminder-name">Vitamin D</h3>
+<p class="text-body-sm text-on-surface-variant" id="modal-reminder-dosage">1 Tablet (1000 IU)</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-3.5 rounded-xl border border-outline-variant/60 flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">info</span>
+<p class="text-xs text-on-surface-variant leading-relaxed" id="modal-reminder-instructions">
+        Take after breakfast with plenty of water.
+      </p>
+</div>
+<div class="flex items-center justify-between gap-3 pt-2 flex-wrap">
+<div class="flex items-center gap-2"><label class="text-xs text-outline">Remind in</label><select id="remind-later-minutes" class="px-2.5 py-1.5 rounded-lg border border-outline-variant text-xs bg-surface-container-lowest"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option></select></div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-2 border border-outline-variant rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container transition-colors" onclick="handleSnoozeReminder()">Remind Later</button>
+<button class="px-3 py-2 border border-error/30 text-error rounded-lg text-xs font-medium hover:bg-red-50" onclick="handleReminderSkip()">Skip</button>
+<button class="px-3 py-2 bg-primary-container text-on-primary hover:bg-primary rounded-lg text-xs font-semibold transition-colors shadow-sm" onclick="handleReminderConfirmTake()">Mark as Taken</button>
+</div></div>
+</div>
+</div>
+<!-- 2. Delete Confirmation Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 hidden" id="modal-delete">
+<div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full border border-outline-variant p-6 shadow-xl space-y-4">
+<div class="w-10 h-10 rounded-full bg-error-container/40 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">delete_forever</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-bold text-on-surface">Delete Medicine?</h3>
+<p class="text-body-sm text-on-surface-variant mt-1" id="modal-delete-text">Are you sure you want to remove this medicine? This action will remove all upcoming reminders.</p>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="px-3.5 py-1.5 border border-outline-variant rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container" onclick="closeDeleteModal()">
+        Cancel
+      </button>
+<button class="px-3.5 py-1.5 bg-error text-white hover:bg-red-700 rounded-lg text-xs font-semibold" id="modal-confirm-delete-btn">
+        Confirm Delete
+      </button>
+</div>
+</div>
+</div>
+<!-- Change Password Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 hidden" id="modal-change-password">
+  <div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full border border-outline-variant p-6 shadow-xl space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-headline-sm font-bold text-on-surface">Change Password</h3>
+      <button class="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container" type="button" onclick="closeChangePasswordModal()"><span class="material-symbols-outlined text-[18px]">close</span></button>
+    </div>
+    <div class="space-y-3">
+      <input id="current-password" type="password" placeholder="Current password" class="w-full px-3 py-2 rounded-lg border border-outline-variant text-sm focus:border-primary outline-none" autocomplete="current-password">
+      <input id="new-password" type="password" placeholder="New password" minlength="6" class="w-full px-3 py-2 rounded-lg border border-outline-variant text-sm focus:border-primary outline-none" autocomplete="new-password">
+      <input id="confirm-password" type="password" placeholder="Confirm new password" minlength="6" class="w-full px-3 py-2 rounded-lg border border-outline-variant text-sm focus:border-primary outline-none" autocomplete="new-password">
+    </div>
+    <div class="flex justify-end gap-2 pt-2">
+      <button class="px-3.5 py-1.5 bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface rounded-lg text-xs font-medium" type="button" onclick="closeChangePasswordModal()">Cancel</button>
+      <button class="px-3.5 py-1.5 bg-primary-container text-on-primary rounded-lg text-xs font-medium" type="button" onclick="submitChangePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= UNIVERSAL TOAST BANNER ================= -->
+<div class="fixed bottom-6 right-6 flex flex-col gap-2 max-w-sm w-full pointer-events-none" id="toast-container"></div>
+<!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+<script>window.MEDIMATE_INITIAL_VIEW = {{ initial_view|tojson }}; window.MEDIMATE_AUTH_MODE = {{ auth_mode|default("login")|tojson }};</script>
+<script src="{{ url_for('static', filename='js/medimate.js') }}"></script>
+</body></html>
